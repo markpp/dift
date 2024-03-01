@@ -197,6 +197,9 @@ class SDFeaturizer:
         onestep_pipe.enable_xformers_memory_efficient_attention()
         self.pipe = onestep_pipe
 
+        #print('Saving unet.pt')
+        #torch.jit.save(unet, 'unet.pt')
+
     @torch.no_grad()
     def forward(self, 
                 img_tensor,

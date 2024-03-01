@@ -12,9 +12,9 @@ class Demo:
         self.num_imgs = len(imgs)
         self.img_size = img_size
 
-    def plot_img_pairs(self, fig_size=3, alpha=0.45, scatter_size=70):
+    def plot_img_pairs(self, fig_size=3, alpha=0.5, scatter_size=70):
 
-        fig, axes = plt.subplots(1, self.num_imgs, figsize=(fig_size*self.num_imgs, fig_size))
+        fig, axes = plt.subplots(1, self.num_imgs*2-1, figsize=(fig_size*self.num_imgs, fig_size))
 
         plt.tight_layout()
 
@@ -56,12 +56,21 @@ class Demo:
                     axes[0].scatter(x, y, c='r', s=scatter_size)
                     axes[0].set_title('source image')
 
-                    for i in range(1, self.num_imgs):
+                    for i in range(1, self.num_imgs, 2):
+                        # create a histogram of the distribution of cosine similarity
+                        axes[i+1].clear()
+                        axes[i+1].hist(cos_map[i-1].flatten(), bins=100, density=False)
+                        axes[i+1].set_title('histogram of cosine similarity')
+                        # find the min and max cosine similarity
+                        #print('min: {}, max: {}'.format(np.min(cos_map[i-1]), np.max(cos_map[i-1])))
+
                         max_yx = np.unravel_index(cos_map[i-1].argmax(), cos_map[i-1].shape)
                         axes[i].clear()
 
                         heatmap = cos_map[i-1]
                         heatmap = (heatmap - np.min(heatmap)) / (np.max(heatmap) - np.min(heatmap))  # Normalize to [0, 1]
+                        threshold = np.percentile(heatmap, 95)
+                        heatmap[heatmap < threshold] = 0
                         axes[i].imshow(self.imgs[i])
                         axes[i].imshow(255 * heatmap, alpha=alpha, cmap='viridis')
                         axes[i].axis('off')
