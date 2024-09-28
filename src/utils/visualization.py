@@ -78,7 +78,7 @@ class Demo:
                         axes[i].imshow(self.imgs[i])
                         axes[i].imshow(255 * heatmap, alpha=alpha, cmap='viridis')
                         axes[i].axis('off')
-                        axes[i].scatter(max_yx[1].item(), max_yx[0].item(), c='r', s=scatter_size)
+                        axes[i].scatter(max_yx[1].item(), max_yx[0].item(), c='r', s=scatter_size, marker='x')
                         axes[i].set_title('target image')
 
                     del cos_map
